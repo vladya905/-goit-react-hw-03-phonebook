@@ -14,6 +14,18 @@ export default class App extends Component {
     ],
     filter: '',
   };
+  #key = 'contacts';
+
+  componentDidMount() {
+    const parsedContacts = JSON.parse(localStorage.getItem(this.#key));
+
+    parsedContacts && this.setState({ contacts: parsedContacts });
+  }
+
+  componentDidUpdate(prevState) {
+    this.state.contacts !== prevState.contacts &&
+      localStorage.setItem(this.#key, JSON.stringify(this.state.contacts));
+  }
 
   addContact = task => {
     const searchSameName = this.state.contacts
@@ -60,7 +72,6 @@ export default class App extends Component {
 
   render() {
     const { filter } = this.state;
-
     const visibleContacts = this.getVisibleContacts();
     const isVisibleFilter = this.state.contacts.length > 1;
 
